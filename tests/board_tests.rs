@@ -157,8 +157,16 @@ fn test_remaining_tiles_len() {
 fn test_remaining_tiles_value() {
     let mut board = Board::new();
 
-    // assert!()
-    todo!()
+    assert!(board.remaining_tiles().contains(&tile!(1,2,3)));
+    assert!(board.remaining_tiles().contains(&tile!(9,7,8)));
+
+    assert!(board.place_tile(field!(1,1), tile!(1,2,3)).is_ok());
+    assert!(!board.remaining_tiles().contains(&tile!(1,2,3)));
+    assert!(board.remaining_tiles().contains(&tile!(9,7,8)));
+
+    assert!(board.place_tile(field!(1,2), tile!(9,7,8)).is_ok());
+    assert!(!board.remaining_tiles().contains(&tile!(1,2,3)));
+    assert!(!board.remaining_tiles().contains(&tile!(9,7,8)));
 }
 
 #[test]
