@@ -45,7 +45,9 @@ fn test_all_tiles() {
 fn test_new_reservoir() {
     let reservoir = TileReservoir::new();
 
-    assert_eq!(reservoir.remaining_tiles, TileReservoir::all_tiles());
+    for tile in TileReservoir::all_tiles() {
+        assert!(reservoir.remaining_tiles.contains(&tile));
+    }
 }
 
 #[test]

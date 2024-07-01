@@ -527,17 +527,21 @@ pub struct TileReservoir {
 
 impl TileReservoir {
     pub fn new() -> TileReservoir {
+        let mut tiles: Vec<Tile> = vec![];
+        for tile in TileReservoir::all_tiles() {
+            tiles.push(tile); // TODO: refactor
+        }
         TileReservoir {
-            remaining_tiles: TileReservoir::all_tiles(),
+            remaining_tiles: tiles,
         }
     }
 
-    pub fn all_tiles() -> Vec<Tile> {
-        let mut tiles: Vec<Tile> = vec![];
+    pub fn all_tiles() -> HashSet<Tile> {
+        let mut tiles: HashSet<Tile> = HashSet::new();
         for top in NumTop::iter() {
             for left in NumLeft::iter() {
                 for right in NumRight::iter() {
-                    tiles.push(Tile { top, left, right });
+                    tiles.insert(Tile { top, left, right });
                 }
             }
         }
