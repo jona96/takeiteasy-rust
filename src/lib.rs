@@ -120,12 +120,7 @@ impl Board {
             let tile = tile.unwrap();
             assert!(reservoir.pick_tile(&tile).is_ok());
         }
-        // return reservoir.remaining_tiles; // TODO: make this work
-        let mut rem_tiles: HashSet<Tile> = HashSet::new();
-        for tile in reservoir.remaining_tiles {
-            rem_tiles.insert(tile);
-        }
-        rem_tiles
+        reservoir.remaining_tiles
     }
 
     pub fn place_tile(&mut self, field: Field, tile: Tile) -> Result<(), ()> {
