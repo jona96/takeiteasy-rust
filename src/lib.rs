@@ -522,17 +522,13 @@ fn all_elements_equal<T: PartialEq>(vec: &[T]) -> bool {
 
 #[derive(Debug)]
 pub struct TileReservoir {
-    pub remaining_tiles: Vec<Tile>,
+    pub remaining_tiles: HashSet<Tile>,
 }
 
 impl TileReservoir {
     pub fn new() -> TileReservoir {
-        let mut tiles: Vec<Tile> = vec![];
-        for tile in TileReservoir::all_tiles() {
-            tiles.push(tile); // TODO: refactor
-        }
         TileReservoir {
-            remaining_tiles: tiles,
+            remaining_tiles: TileReservoir::all_tiles(),
         }
     }
 
@@ -561,7 +557,7 @@ impl TileReservoir {
             return Err(());
         }
         let random_index = rand::thread_rng().gen_range(0..self.remaining_tiles.len());
-        let tile = self.remaining_tiles[random_index];
+        let tile = self.remaining_tiles.iter().nth(random_index).unwrap().to_owned();
         self.pick_tile(&tile).map(|_| tile)
     }
 }
