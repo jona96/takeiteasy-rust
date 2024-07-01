@@ -5,7 +5,7 @@ fn test_start_to_finish() {
     let mut total_score = 0;
     for _ in 0..10 {
         let mut game = Game::new();
-    
+
         for field in Board::all_fields() {
             assert!(!game.finished());
             assert!(game.current_tile.is_some());

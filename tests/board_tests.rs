@@ -39,16 +39,13 @@ fn test_new_board_fields_empty() {
 fn test_place_valid_tile() {
     let mut board = Board::new();
     assert!(board.place_tile(field!(1, 3), tile!(1, 2, 3)).is_ok());
-    assert_eq!(
-        board.tiles.get(&field!(1, 3)),
-        Some(&Some(tile!(1, 2, 3)))
-    );
+    assert_eq!(board.tiles.get(&field!(1, 3)), Some(&Some(tile!(1, 2, 3))));
 }
 
 #[test]
 fn test_place_tile_on_invalid_field() {
     let mut board = Board::new();
-    assert!(board.place_tile(field!(1,5), tile!(1,2,3)).is_err());
+    assert!(board.place_tile(field!(1, 5), tile!(1, 2, 3)).is_err());
 }
 
 #[test]
@@ -77,7 +74,6 @@ fn test_place_on_used_field() {
 
 #[test]
 fn test_print_empty_board() {
-    
     let expected = r"
                                 _______
                                /       \     
@@ -107,7 +103,6 @@ fn test_print_empty_board() {
 
 #[test]
 fn test_print_single_tile() {
-    
     let expected = r"
                                 _______
                                /       \     
@@ -132,7 +127,7 @@ fn test_print_single_tile() {
                                \_______/";
 
     let mut board = Board::new();
-    assert!(board.place_tile(field!(1,1), tile!(1,2,3)).is_ok());
+    assert!(board.place_tile(field!(1, 1), tile!(1, 2, 3)).is_ok());
     assert_eq!(expected, format!("{}", board));
 }
 
@@ -157,21 +152,20 @@ fn test_remaining_tiles_len() {
 fn test_remaining_tiles_value() {
     let mut board = Board::new();
 
-    assert!(board.remaining_tiles().contains(&tile!(1,2,3)));
-    assert!(board.remaining_tiles().contains(&tile!(9,7,8)));
+    assert!(board.remaining_tiles().contains(&tile!(1, 2, 3)));
+    assert!(board.remaining_tiles().contains(&tile!(9, 7, 8)));
 
-    assert!(board.place_tile(field!(1,1), tile!(1,2,3)).is_ok());
-    assert!(!board.remaining_tiles().contains(&tile!(1,2,3)));
-    assert!(board.remaining_tiles().contains(&tile!(9,7,8)));
+    assert!(board.place_tile(field!(1, 1), tile!(1, 2, 3)).is_ok());
+    assert!(!board.remaining_tiles().contains(&tile!(1, 2, 3)));
+    assert!(board.remaining_tiles().contains(&tile!(9, 7, 8)));
 
-    assert!(board.place_tile(field!(1,2), tile!(9,7,8)).is_ok());
-    assert!(!board.remaining_tiles().contains(&tile!(1,2,3)));
-    assert!(!board.remaining_tiles().contains(&tile!(9,7,8)));
+    assert!(board.place_tile(field!(1, 2), tile!(9, 7, 8)).is_ok());
+    assert!(!board.remaining_tiles().contains(&tile!(1, 2, 3)));
+    assert!(!board.remaining_tiles().contains(&tile!(9, 7, 8)));
 }
 
 #[test]
 fn test_print_full_board() {
-
     let expected = r"
                                 _______
                                /       \     
@@ -196,29 +190,29 @@ fn test_print_full_board() {
                                \_______/";
 
     let mut board = Board::new();
-    assert!(board.place_tile(field!(1,1), tile!(9,7,3)).is_ok());
-    assert!(board.place_tile(field!(1,2), tile!(9,2,4)).is_ok());
-    assert!(board.place_tile(field!(1,3), tile!(9,2,3)).is_ok());
+    assert!(board.place_tile(field!(1, 1), tile!(9, 7, 3)).is_ok());
+    assert!(board.place_tile(field!(1, 2), tile!(9, 2, 4)).is_ok());
+    assert!(board.place_tile(field!(1, 3), tile!(9, 2, 3)).is_ok());
 
-    assert!(board.place_tile(field!(2,1), tile!(5,6,8)).is_ok());
-    assert!(board.place_tile(field!(2,2), tile!(5,2,8)).is_ok());
-    assert!(board.place_tile(field!(2,3), tile!(1,2,4)).is_ok());
-    assert!(board.place_tile(field!(2,4), tile!(5,6,3)).is_ok());
+    assert!(board.place_tile(field!(2, 1), tile!(5, 6, 8)).is_ok());
+    assert!(board.place_tile(field!(2, 2), tile!(5, 2, 8)).is_ok());
+    assert!(board.place_tile(field!(2, 3), tile!(1, 2, 4)).is_ok());
+    assert!(board.place_tile(field!(2, 4), tile!(5, 6, 3)).is_ok());
 
-    assert!(board.place_tile(field!(3,1), tile!(1,6,3)).is_ok());
-    assert!(board.place_tile(field!(3,2), tile!(1,2,8)).is_ok());
-    assert!(board.place_tile(field!(3,3), tile!(9,6,4)).is_ok());
-    assert!(board.place_tile(field!(3,4), tile!(1,7,4)).is_ok());
-    assert!(board.place_tile(field!(3,5), tile!(1,7,3)).is_ok());
+    assert!(board.place_tile(field!(3, 1), tile!(1, 6, 3)).is_ok());
+    assert!(board.place_tile(field!(3, 2), tile!(1, 2, 8)).is_ok());
+    assert!(board.place_tile(field!(3, 3), tile!(9, 6, 4)).is_ok());
+    assert!(board.place_tile(field!(3, 4), tile!(1, 7, 4)).is_ok());
+    assert!(board.place_tile(field!(3, 5), tile!(1, 7, 3)).is_ok());
 
-    assert!(board.place_tile(field!(4,1), tile!(1,2,3)).is_ok());
-    assert!(board.place_tile(field!(4,2), tile!(1,6,8)).is_ok());
-    assert!(board.place_tile(field!(4,3), tile!(1,7,8)).is_ok());
-    assert!(board.place_tile(field!(4,4), tile!(5,7,4)).is_ok());
+    assert!(board.place_tile(field!(4, 1), tile!(1, 2, 3)).is_ok());
+    assert!(board.place_tile(field!(4, 2), tile!(1, 6, 8)).is_ok());
+    assert!(board.place_tile(field!(4, 3), tile!(1, 7, 8)).is_ok());
+    assert!(board.place_tile(field!(4, 4), tile!(5, 7, 4)).is_ok());
 
-    assert!(board.place_tile(field!(5,1), tile!(5,2,3)).is_ok());
-    assert!(board.place_tile(field!(5,2), tile!(5,7,8)).is_ok());
-    assert!(board.place_tile(field!(5,3), tile!(5,7,3)).is_ok());
+    assert!(board.place_tile(field!(5, 1), tile!(5, 2, 3)).is_ok());
+    assert!(board.place_tile(field!(5, 2), tile!(5, 7, 8)).is_ok());
+    assert!(board.place_tile(field!(5, 3), tile!(5, 7, 3)).is_ok());
 
     assert_eq!(expected, format!("{}", board));
 }

@@ -1,9 +1,12 @@
 pub mod tile;
-use tile::{NumLeft, NumRight, NumTop, Tile};
 use core::fmt;
 use rand::Rng;
-use std::{collections::{HashMap, HashSet}, hash::Hash};
+use std::{
+    collections::{HashMap, HashSet},
+    hash::Hash,
+};
 use strum::IntoEnumIterator;
+use tile::{NumLeft, NumRight, NumTop, Tile};
 
 #[repr(i32)]
 #[derive(PartialEq, Eq, Copy, Clone, Hash, Debug)]
@@ -92,25 +95,25 @@ impl Board {
 
     pub fn all_fields() -> HashSet<Field> {
         let mut fields = HashSet::new();
-        fields.insert(field!(1,1));
-        fields.insert(field!(1,2));
-        fields.insert(field!(1,3));
-        fields.insert(field!(2,1));
-        fields.insert(field!(2,2));
-        fields.insert(field!(2,3));
-        fields.insert(field!(2,4));
-        fields.insert(field!(3,1));
-        fields.insert(field!(3,2));
-        fields.insert(field!(3,3));
-        fields.insert(field!(3,4));
-        fields.insert(field!(3,5));
-        fields.insert(field!(4,1));
-        fields.insert(field!(4,2));
-        fields.insert(field!(4,3));
-        fields.insert(field!(4,4));
-        fields.insert(field!(5,1));
-        fields.insert(field!(5,2));
-        fields.insert(field!(5,3));
+        fields.insert(field!(1, 1));
+        fields.insert(field!(1, 2));
+        fields.insert(field!(1, 3));
+        fields.insert(field!(2, 1));
+        fields.insert(field!(2, 2));
+        fields.insert(field!(2, 3));
+        fields.insert(field!(2, 4));
+        fields.insert(field!(3, 1));
+        fields.insert(field!(3, 2));
+        fields.insert(field!(3, 3));
+        fields.insert(field!(3, 4));
+        fields.insert(field!(3, 5));
+        fields.insert(field!(4, 1));
+        fields.insert(field!(4, 2));
+        fields.insert(field!(4, 3));
+        fields.insert(field!(4, 4));
+        fields.insert(field!(5, 1));
+        fields.insert(field!(5, 2));
+        fields.insert(field!(5, 3));
         fields
     }
 
@@ -552,7 +555,12 @@ impl TileReservoir {
             return Err(());
         }
         let random_index = rand::thread_rng().gen_range(0..self.remaining_tiles.len());
-        let tile = self.remaining_tiles.iter().nth(random_index).unwrap().to_owned();
+        let tile = self
+            .remaining_tiles
+            .iter()
+            .nth(random_index)
+            .unwrap()
+            .to_owned();
         self.pick_tile(&tile).map(|_| tile)
     }
 }

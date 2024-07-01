@@ -1,6 +1,5 @@
-
-use strum_macros::EnumIter;
 use core::fmt;
+use strum_macros::EnumIter;
 
 #[repr(i32)]
 #[derive(PartialEq, Eq, Debug, Copy, Hash, Clone, EnumIter)]
@@ -84,4 +83,3 @@ macro_rules! tile {
         }
     };
 }
-

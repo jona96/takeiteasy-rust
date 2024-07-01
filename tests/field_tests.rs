@@ -4,7 +4,7 @@ macro_rules! check_new_valid_field {
     ($col:expr, $row:expr) => {
         assert_eq!(
             Field::new(
-                Coordinate::from_int($col).unwrap(), 
+                Coordinate::from_int($col).unwrap(),
                 Coordinate::from_int($row).unwrap(),
             ),
             Ok(field!($col, $row))
@@ -15,7 +15,10 @@ macro_rules! check_new_valid_field {
 macro_rules! check_new_invalid_field {
     ($col:expr, $row:expr, $msg:expr) => {
         assert_eq!(
-            Field::new(Coordinate::from_int($col).unwrap(), Coordinate::from_int($row).unwrap()),
+            Field::new(
+                Coordinate::from_int($col).unwrap(),
+                Coordinate::from_int($row).unwrap()
+            ),
             Err($msg.to_string())
         );
     };
