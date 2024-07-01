@@ -1,8 +1,8 @@
 pub mod tile;
-use tile::{NumTop, NumLeft, NumRight, Tile};
+use tile::{NumLeft, NumRight, NumTop, Tile};
 use core::fmt;
 use rand::Rng;
-use std::collections::HashMap;
+use std::{collections::{HashMap, HashSet}, hash::Hash};
 use strum::IntoEnumIterator;
 
 #[repr(i32)]
@@ -112,6 +112,20 @@ impl Board {
             tiles: HashMap::new(),
         };
         board
+    }
+
+    pub fn remaining_tiles(&self) -> HashSet<Tile> {
+        let mut reservoir = TileReservoir::new();
+        for tile in self.tiles.values() {
+            let tile = tile.unwrap();
+            assert!(reservoir.pick_tile(&tile).is_ok());
+        }
+        // return reservoir.remaining_tiles; // TODO: make this work
+        let mut rem_tiles: HashSet<Tile> = HashSet::new();
+        for tile in reservoir.remaining_tiles {
+            rem_tiles.insert(tile);
+        }
+        rem_tiles
     }
 
     pub fn place_tile(&mut self, field: Field, tile: Tile) -> Result<(), ()> {

@@ -3,7 +3,7 @@ use strum_macros::EnumIter;
 use core::fmt;
 
 #[repr(i32)]
-#[derive(PartialEq, Debug, Copy, Clone, EnumIter)]
+#[derive(PartialEq, Eq, Debug, Copy, Hash, Clone, EnumIter)]
 pub enum NumTop {
     N1 = 1,
     N5 = 5,
@@ -21,7 +21,7 @@ impl NumTop {
     }
 }
 
-#[derive(PartialEq, Debug, Copy, Clone, EnumIter)]
+#[derive(PartialEq, Eq, Debug, Copy, Hash, Clone, EnumIter)]
 pub enum NumLeft {
     N2 = 2,
     N6 = 6,
@@ -39,7 +39,7 @@ impl NumLeft {
     }
 }
 
-#[derive(PartialEq, Debug, Copy, Clone, EnumIter)]
+#[derive(PartialEq, Eq, Debug, Copy, Hash, Clone, EnumIter)]
 pub enum NumRight {
     N3 = 3,
     N4 = 4,
@@ -57,7 +57,7 @@ impl NumRight {
     }
 }
 
-#[derive(PartialEq, Clone, Copy, Debug)]
+#[derive(PartialEq, Eq, Clone, Copy, Hash, Debug)]
 pub struct Tile {
     pub top: NumTop,
     pub left: NumLeft,

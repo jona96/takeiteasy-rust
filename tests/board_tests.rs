@@ -137,6 +137,31 @@ fn test_print_single_tile() {
 }
 
 #[test]
+fn test_remaining_tiles_len() {
+    let mut tiles = TileReservoir::new();
+    let mut num_tiles = tiles.remaining_tiles.len();
+
+    let mut board = Board::new();
+    assert_eq!(num_tiles, board.remaining_tiles().len());
+
+    for field in Field::all_fields() {
+        let tile = tiles.pick_random_tile().unwrap();
+        board.place_tile(field, tile).unwrap();
+        num_tiles -= 1;
+        assert_eq!(num_tiles, board.remaining_tiles().len());
+    }
+    assert_ne!(0, board.remaining_tiles().len());
+}
+
+#[test]
+fn test_remaining_tiles_value() {
+    let mut board = Board::new();
+
+    // assert!()
+    todo!()
+}
+
+#[test]
 fn test_print_full_board() {
 
     let expected = r"
