@@ -59,30 +59,6 @@ impl Field {
 
         return Ok(());
     }
-
-    pub fn all_fields() -> Vec<Field> {
-        vec![
-            Field::new(Coordinate::C1, Coordinate::C1).unwrap(),
-            Field::new(Coordinate::C1, Coordinate::C2).unwrap(),
-            Field::new(Coordinate::C1, Coordinate::C3).unwrap(),
-            Field::new(Coordinate::C2, Coordinate::C1).unwrap(),
-            Field::new(Coordinate::C2, Coordinate::C2).unwrap(),
-            Field::new(Coordinate::C2, Coordinate::C3).unwrap(),
-            Field::new(Coordinate::C2, Coordinate::C4).unwrap(),
-            Field::new(Coordinate::C3, Coordinate::C1).unwrap(),
-            Field::new(Coordinate::C3, Coordinate::C2).unwrap(),
-            Field::new(Coordinate::C3, Coordinate::C3).unwrap(),
-            Field::new(Coordinate::C3, Coordinate::C4).unwrap(),
-            Field::new(Coordinate::C3, Coordinate::C5).unwrap(),
-            Field::new(Coordinate::C4, Coordinate::C1).unwrap(),
-            Field::new(Coordinate::C4, Coordinate::C2).unwrap(),
-            Field::new(Coordinate::C4, Coordinate::C3).unwrap(),
-            Field::new(Coordinate::C4, Coordinate::C4).unwrap(),
-            Field::new(Coordinate::C5, Coordinate::C1).unwrap(),
-            Field::new(Coordinate::C5, Coordinate::C2).unwrap(),
-            Field::new(Coordinate::C5, Coordinate::C3).unwrap(),
-        ]
-    }
 }
 
 impl fmt::Display for Field {
@@ -112,6 +88,30 @@ impl Board {
             tiles: HashMap::new(),
         };
         board
+    }
+
+    pub fn all_fields() -> HashSet<Field> {
+        let mut fields = HashSet::new();
+        fields.insert(field!(1,1));
+        fields.insert(field!(1,2));
+        fields.insert(field!(1,3));
+        fields.insert(field!(2,1));
+        fields.insert(field!(2,2));
+        fields.insert(field!(2,3));
+        fields.insert(field!(2,4));
+        fields.insert(field!(3,1));
+        fields.insert(field!(3,2));
+        fields.insert(field!(3,3));
+        fields.insert(field!(3,4));
+        fields.insert(field!(3,5));
+        fields.insert(field!(4,1));
+        fields.insert(field!(4,2));
+        fields.insert(field!(4,3));
+        fields.insert(field!(4,4));
+        fields.insert(field!(5,1));
+        fields.insert(field!(5,2));
+        fields.insert(field!(5,3));
+        fields
     }
 
     pub fn remaining_tiles(&self) -> HashSet<Tile> {

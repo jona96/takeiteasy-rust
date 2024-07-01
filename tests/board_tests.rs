@@ -144,7 +144,7 @@ fn test_remaining_tiles_len() {
     let mut board = Board::new();
     assert_eq!(num_tiles, board.remaining_tiles().len());
 
-    for field in Field::all_fields() {
+    for field in Board::all_fields() {
         let tile = tiles.pick_random_tile().unwrap();
         board.place_tile(field, tile).unwrap();
         num_tiles -= 1;
