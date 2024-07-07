@@ -75,9 +75,33 @@ fn test_place_on_used_field() {
 #[test]
 fn test_place_valid_tile_on_new_board() {
     let board = Board::new();
+
     let new_board = board.place_tile_on_new_board(field!(1, 3), tile!(1, 2, 3)).unwrap();
+    assert_eq!(1, new_board.tiles.len());
+    assert!(new_board.tiles.contains_key(&field!(1,3)));
+    assert_eq!(&Some(tile!(1,2,3)), new_board.tiles.get(&field!(1,3)).unwrap());
+    
+    // verify old board is unchanged
     assert_eq!(new_board.tiles.get(&field!(1, 3)).unwrap(), &Some(tile!(1, 2, 3)));
+    assert_eq!(0, board.tiles.len());
     assert!(!board.tiles.contains_key(&field!(1,3)));
+}
+
+#[test]
+fn test_place_two_valid_tiles_on_new_board() {
+    let board = Board::new();
+
+    let new_board = board.place_tile_on_new_board(field!(1, 3), tile!(1, 2, 3)).unwrap();
+    assert_eq!(1, new_board.tiles.len());
+    assert!(new_board.tiles.contains_key(&field!(1,3)));
+    assert_eq!(&Some(tile!(1,2,3)), new_board.tiles.get(&field!(1,3)).unwrap());
+    
+    let new_board2 = new_board.place_tile_on_new_board(field!(1, 2), tile!(9, 2, 3)).unwrap();
+    assert!(new_board2.tiles.contains_key(&field!(1,3)));
+    assert!(new_board2.tiles.contains_key(&field!(1,2)));
+    assert_eq!(&Some(tile!(1,2,3)), new_board2.tiles.get(&field!(1,3)).unwrap());
+    assert_eq!(&Some(tile!(9,2,3)), new_board2.tiles.get(&field!(1,2)).unwrap());
+    assert_eq!(2, new_board2.tiles.len());
 }
 
 #[test]

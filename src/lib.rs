@@ -81,7 +81,7 @@ macro_rules! field {
     };
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Board {
     pub tiles: HashMap<Field, Option<Tile>>,
 }
@@ -152,10 +152,8 @@ impl Board {
     }
 
     pub fn place_tile_on_new_board(&self, field: Field, tile: Tile) -> Result<Board, ()> {
-        let mut new_board = Board{tiles:HashMap::new()};
-        self.clone_into(&mut &new_board);
-        let result = new_board.place_tile(field, tile);
-        result.map(|_| new_board)
+        let mut new_board: Board = self.clone();
+        new_board.place_tile(field, tile).map(|_| new_board)
     }
 
     pub fn score(&self) -> u32 {
