@@ -127,6 +127,16 @@ impl Board {
         reservoir.remaining_tiles
     }
 
+    pub fn empty_fields(&self) -> HashSet<Field> {
+        let mut fields = HashSet::new();
+        for field in Board::all_fields() {
+            if !self.tiles.contains_key(&field) || self.tiles.get(&field).is_none() {
+                fields.insert(field);
+            }
+        }
+        fields
+    }
+
     pub fn place_tile(&mut self, field: Field, tile: Tile) -> Result<(), ()> {
         if !field.check().is_ok() {
             return Err(());

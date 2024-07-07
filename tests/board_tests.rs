@@ -165,6 +165,32 @@ fn test_remaining_tiles_value() {
 }
 
 #[test]
+fn test_remaining_fields_on_empty_board() {
+    let empty_board = Board::new();
+    for field in Board::all_fields() {
+        assert!(empty_board.empty_fields().contains(&field));
+    }
+}
+
+#[test]
+fn test_remaining_fields_with_one_tile() {
+    let mut board = Board::new();
+    assert!(board.place_tile(field!(1,1), tile!(1,2,3)).is_ok());
+    assert!(!board.empty_fields().contains(&field!(1,1)));
+    assert_eq!(Board::all_fields().len() - 1, board.empty_fields().len());
+}
+
+#[test]
+fn test_remaining_fields_on_full_board() {
+    let mut board = Board::new();
+    for field in Board::all_fields() {
+        let some_tile = board.remaining_tiles().iter().next().unwrap().to_owned();
+        assert!(board.place_tile(field, some_tile).is_ok());
+    }
+    assert!(board.empty_fields().is_empty());
+}
+
+#[test]
 fn test_print_full_board() {
     let expected = r"
                                 _______
