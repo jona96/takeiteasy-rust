@@ -73,6 +73,20 @@ fn test_place_on_used_field() {
 }
 
 #[test]
+fn test_place_valid_tile_on_new_board() {
+    let board = Board::new();
+    let new_board = board.place_tile_on_new_board(field!(1, 3), tile!(1, 2, 3)).unwrap();
+    assert_eq!(new_board.tiles.get(&field!(1, 3)).unwrap(), &Some(tile!(1, 2, 3)));
+    assert!(!board.tiles.contains_key(&field!(1,3)));
+}
+
+#[test]
+fn test_place_tile_on_invalid_field_on_new_board() {
+    let board = Board::new();
+    assert!(board.place_tile_on_new_board(field!(1, 5), tile!(1, 2, 3)).is_err());
+}
+
+#[test]
 fn test_print_empty_board() {
     let expected = r"
                                 _______
