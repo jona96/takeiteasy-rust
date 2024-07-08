@@ -1,5 +1,5 @@
 use std::collections::{HashMap, HashSet};
-use crate::{tile::Tile, Board, Game, TileReservoir};
+use crate::{tile::Tile, Board, Field, Game, TileReservoir};
 
 pub struct AI {
     game: Game,
@@ -10,11 +10,33 @@ impl AI {
         Ok(AI { game: Game::new() })
     }
 
-    pub fn play_game(&mut self) -> Result<i32, ()> {
-        todo!();
-        // for _ in 0..len(TileReservoir::all_tiles()){
-        //     // let position = self.game.board.tiles
-        // }
+    pub fn play_game(depth:i32) -> u32 {
+
+        fn best_field(scores:&HashMap<Field, f64>) -> Field {
+            let mut best_field = scores.keys().into_iter().next().unwrap();
+            let mut best_score = scores.get(&best_field).unwrap();
+            for (field, score) in scores {
+                if score > best_score {
+                    best_score = score;
+                    best_field = field;
+                }
+            }
+            *best_field
+        }
+
+        let mut game = Game::new();
+        while !game.finished() {
+            let mut scores:HashMap<Field, f64> = HashMap::new();
+            for field in game.board.empty_fields() {
+                scores.insert(field, AI::estimated_score(&game.board, depth).unwrap());
+            }
+            assert!(game.place_tile(best_field(&scores)).is_ok());
+            dbg!(scores);
+        }
+        let score = game.board.score();
+        dbg!(score);
+        println!("{}", game.board);
+        score
     }
 
     fn eval_position(board: &Board) -> Result<f64, ()> {

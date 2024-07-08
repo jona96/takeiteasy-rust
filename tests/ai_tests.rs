@@ -103,9 +103,7 @@ fn test_eval_almost_full_board() {
     assert!(diff_percent < tolerance_percent);
 }
 
-// #[test]
-// fn test_ai_full_game() {
-//     todo!();
-//     // let
-//     // assert_eq!(0, Board::new().score());
-// }
+#[test]
+fn test_ai_full_game() {
+    assert_ne!(0, AI::play_game(0));
+}
