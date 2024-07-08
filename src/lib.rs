@@ -118,6 +118,65 @@ impl Board {
         fields
     }
 
+    fn top_score_sections() -> Vec<Vec<Field>> {
+        let section_top_1 = vec![field!(1, 1), field!(1, 2), field!(1, 3)];
+        let section_top_2 = vec![field!(2, 1), field!(2, 2), field!(2, 3), field!(2, 4)];
+        let section_top_3 = vec![
+            field!(3, 1),
+            field!(3, 2),
+            field!(3, 3),
+            field!(3, 4),
+            field!(3, 5),
+        ];
+        let section_top_4 = vec![field!(4, 1), field!(4, 2), field!(4, 3), field!(4, 4)];
+        let section_top_5 = vec![field!(5, 1), field!(5, 2), field!(5, 3)];
+
+        vec![
+            section_top_1,
+            section_top_2,
+            section_top_3,
+            section_top_4,
+            section_top_5,
+        ]
+    }
+
+    fn left_score_sections() -> Vec<Vec<Field>> {
+        let section_left_1 = vec![field!(1, 1), field!(2, 1), field!(3, 1)];
+        let section_left_2 = vec![field!(1, 2), field!(2, 2), field!(3, 2), field!(4, 1)];
+        let section_left_3 = vec![
+            field!(1, 3),
+            field!(2, 3),
+            field!(3, 3),
+            field!(4, 2),
+            field!(5, 1),
+        ];
+        let section_left_4 = vec![field!(2, 4), field!(3, 4), field!(4, 3), field!(5, 2)];
+        let section_left_5 = vec![field!(3, 5), field!(4, 4), field!(5, 3)];
+
+        vec![
+            section_left_1,
+            section_left_2,
+            section_left_3,
+            section_left_4,
+            section_left_5,
+        ]
+    }
+
+    fn right_score_sections() -> Vec<Vec<Field>> {
+        let section1 = vec![field!(3, 1), field!(4, 1), field!(5, 1)];
+        let section2 = vec![field!(2, 1), field!(3, 2), field!(4, 2), field!(5, 2)];
+        let section3 = vec![
+            field!(1, 1),
+            field!(2, 2),
+            field!(3, 3),
+            field!(4, 3),
+            field!(5, 3),
+        ];
+        let section4 = vec![field!(1, 2), field!(2, 3), field!(3, 4), field!(4, 4)];
+        let section5 = vec![field!(1, 3), field!(2, 4), field!(3, 5)];
+        vec![section1, section2, section3, section4, section5]
+    }
+
     pub fn remaining_tiles(&self) -> HashSet<Tile> {
         let mut reservoir = TileReservoir::new();
         for tile in self.tiles.values() {
@@ -163,67 +222,8 @@ impl Board {
     pub fn score(&self) -> u32 {
         let mut score = 0;
 
-        // sections
-        let section_top_1 = vec![field!(1, 1), field!(1, 2), field!(1, 3)];
-        let section_top_2 = vec![field!(2, 1), field!(2, 2), field!(2, 3), field!(2, 4)];
-        let section_top_3 = vec![
-            field!(3, 1),
-            field!(3, 2),
-            field!(3, 3),
-            field!(3, 4),
-            field!(3, 5),
-        ];
-        let section_top_4 = vec![field!(4, 1), field!(4, 2), field!(4, 3), field!(4, 4)];
-        let section_top_5 = vec![field!(5, 1), field!(5, 2), field!(5, 3)];
-
-        let section_left_1 = vec![field!(1, 1), field!(2, 1), field!(3, 1)];
-        let section_left_2 = vec![field!(1, 2), field!(2, 2), field!(3, 2), field!(4, 1)];
-        let section_left_3 = vec![
-            field!(1, 3),
-            field!(2, 3),
-            field!(3, 3),
-            field!(4, 2),
-            field!(5, 1),
-        ];
-        let section_left_4 = vec![field!(2, 4), field!(3, 4), field!(4, 3), field!(5, 2)];
-        let section_left_5 = vec![field!(3, 5), field!(4, 4), field!(5, 3)];
-
-        let section_right_1 = vec![field!(3, 1), field!(4, 1), field!(5, 1)];
-        let section_right_2 = vec![field!(2, 1), field!(3, 2), field!(4, 2), field!(5, 2)];
-        let section_right_3 = vec![
-            field!(1, 1),
-            field!(2, 2),
-            field!(3, 3),
-            field!(4, 3),
-            field!(5, 3),
-        ];
-        let section_right_4 = vec![field!(1, 2), field!(2, 3), field!(3, 4), field!(4, 4)];
-        let section_right_5 = vec![field!(1, 3), field!(2, 4), field!(3, 5)];
-
-        let top_sections = vec![
-            section_top_1,
-            section_top_2,
-            section_top_3,
-            section_top_4,
-            section_top_5,
-        ];
-        let left_sections = vec![
-            section_left_1,
-            section_left_2,
-            section_left_3,
-            section_left_4,
-            section_left_5,
-        ];
-        let right_sections = vec![
-            section_right_1,
-            section_right_2,
-            section_right_3,
-            section_right_4,
-            section_right_5,
-        ];
-
         // top sections
-        for section in top_sections {
+        for section in Board::top_score_sections() {
             let numbers: Vec<u32> = section
                 .iter()
                 .map(|field| match self.tiles.get(field) {
@@ -238,7 +238,7 @@ impl Board {
         }
 
         // left sections
-        for section in left_sections {
+        for section in Board::left_score_sections() {
             let numbers: Vec<u32> = section
                 .iter()
                 .map(|field| match self.tiles.get(field) {
@@ -253,7 +253,7 @@ impl Board {
         }
 
         // right sections
-        for section in right_sections {
+        for section in Board::right_score_sections() {
             let numbers: Vec<u32> = section
                 .iter()
                 .map(|field| match self.tiles.get(field) {
