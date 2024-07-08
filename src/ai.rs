@@ -17,22 +17,34 @@ impl AI {
         // }
     }
 
-    pub fn estimated_score(board: &Board) -> Result<f64, ()> {
-        if board.empty_fields().is_empty() {
+    fn eval_position(board: &Board) -> Result<f64, ()> {
+        if board.is_full() {
             return Ok(board.score() as f64);
         }
+        Ok(board.score() as f64)
+    }
 
-        for field in board.empty_fields() {
-            let mut total_score = 0.0;
-            for tile in board.remaining_tiles() {
-                let new_board = board.place_tile_on_new_board(field, tile).unwrap();
-                let score = AI::estimated_score(&new_board).unwrap();
-                total_score += score;
-            }
-            let avg_score = total_score / board.remaining_tiles().len() as f64;
-            return Ok(avg_score);
+    pub fn estimated_score(board: &Board, iterations:i32) -> Result<f64, ()> {
+        if iterations == 0 {
+            return AI::eval_position(board);
         }
 
-        panic!();
+        if board.is_full() {
+            return AI::eval_position(board);
+        }
+
+        // calc more depth levels
+        // one level/iteration means the average of all remaining tiles on all empty fields
+        // todo: use best placement (best field) of tile
+        let mut total_score = 0.0;
+        for tile in board.remaining_tiles() {
+            for field in board.empty_fields() {
+                let new_board = board.place_tile_on_new_board(field, tile).unwrap();
+                let score = AI::estimated_score(&new_board, iterations - 1).unwrap();
+                total_score += score;
+            }
+        }
+        let avg_score = total_score / board.remaining_tiles().len() as f64;
+        return Ok(avg_score);
     }
 }

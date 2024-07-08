@@ -69,14 +69,14 @@ fn get_almost_full_board() -> Board {
 #[test]
 fn test_eval_empty_board() {
     let empty_board = Board::new();
-    assert!(AI::estimated_score(&empty_board).unwrap() > 0.0);
+    assert!(AI::estimated_score(&empty_board, 2).unwrap() > 0.0);
 }
 
 #[test]
 fn test_eval_full_board() {
     let board = get_full_board();
     let expected_score = board.score() as f64;
-    assert_eq!(expected_score, AI::estimated_score(&board).unwrap());
+    assert_eq!(expected_score, AI::estimated_score(&board, 0).unwrap());
 }
 
 #[test]
@@ -95,13 +95,11 @@ fn test_eval_almost_full_board() {
         total_score += full_board.score() as f64;
     }
     let expected_score = total_score / board.remaining_tiles().len() as f64;
-    let mut diff = expected_score - AI::estimated_score(&board).unwrap();
+    let mut diff = expected_score - AI::estimated_score(&board, 1).unwrap();
     if diff < 0.0 {
         diff = -diff;
     }
     let diff_percent = diff / expected_score * 100.0;
-    dbg!(expected_score);
-    dbg!(AI::estimated_score(&board).unwrap());
     assert!(diff_percent < tolerance_percent);
 }
 
