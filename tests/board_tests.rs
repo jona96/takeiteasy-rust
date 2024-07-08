@@ -226,6 +226,7 @@ fn test_remaining_fields_on_full_board() {
         assert!(board.place_tile(field, some_tile).is_ok());
     }
     assert!(board.empty_fields().is_empty());
+    assert!(board.is_full());
 }
 
 #[test]

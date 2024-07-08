@@ -137,6 +137,10 @@ impl Board {
         fields
     }
 
+    pub fn is_full(&self) -> bool {
+        self.empty_fields().is_empty()
+    }
+
     pub fn place_tile(&mut self, field: Field, tile: Tile) -> Result<(), ()> {
         if !field.check().is_ok() {
             return Err(());

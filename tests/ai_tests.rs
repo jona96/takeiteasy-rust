@@ -90,7 +90,7 @@ fn test_eval_almost_full_board() {
     let mut total_score = 0.0;
     for possible_last_tile in board.remaining_tiles() {
         let full_board = board.place_tile_on_new_board(empty_field, possible_last_tile).unwrap();
-        assert!(full_board.empty_fields().is_empty());
+        assert!(full_board.is_full());
         assert_ne!(0, full_board.score());
         total_score += full_board.score() as f64;
     }
