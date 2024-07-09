@@ -1,5 +1,5 @@
-pub mod tile;
 pub mod ai;
+pub mod tile;
 use core::fmt;
 use rand::Rng;
 use std::{
