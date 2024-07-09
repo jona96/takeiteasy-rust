@@ -264,13 +264,9 @@ impl Board {
     }
 
     pub fn score(&self) -> u32 {
-        let mut score = 0;
-
-        score += self.section_score::<NumTop>();
-        score += self.section_score::<NumLeft>();
-        score += self.section_score::<NumRight>();
-
-        score
+        self.section_score::<NumTop>()
+            + self.section_score::<NumLeft>()
+            + self.section_score::<NumRight>()
     }
 }
 
