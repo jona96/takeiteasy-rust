@@ -3,6 +3,7 @@ pub mod ai;
 use core::fmt;
 use rand::Rng;
 use std::{
+    any::TypeId,
     collections::{HashMap, HashSet},
     hash::Hash,
 };
@@ -219,53 +220,55 @@ impl Board {
         new_board.place_tile(field, tile).map(|_| new_board)
     }
 
+    fn section_score<T: 'static>(&self) -> u32 {
+        let mut score: u32 = 0;
+        let t_type = TypeId::of::<T>();
+        let top_type = TypeId::of::<NumTop>();
+        let left_type = TypeId::of::<NumLeft>();
+        let right_type = TypeId::of::<NumRight>();
+
+        let sections = if t_type == top_type {
+            Board::top_score_sections()
+        } else if t_type == left_type {
+            Board::left_score_sections()
+        } else if t_type == right_type {
+            Board::right_score_sections()
+        } else {
+            panic!("Unexpected type");
+        };
+
+        for section in sections {
+            let numbers: Vec<u32> = section
+                .iter()
+                .map(|field| match self.tiles.get(field) {
+                    Some(tile) => {
+                        if t_type == top_type {
+                            tile.unwrap().top as u32
+                        } else if t_type == left_type {
+                            tile.unwrap().left as u32
+                        } else if t_type == right_type {
+                            tile.unwrap().right as u32
+                        } else {
+                            panic!("Unexpected type");
+                        }
+                    }
+                    None => 0,
+                })
+                .collect();
+
+            if all_elements_equal(&numbers) {
+                score += numbers.first().unwrap() * numbers.len() as u32;
+            }
+        }
+        return score;
+    }
+
     pub fn score(&self) -> u32 {
         let mut score = 0;
 
-        // top sections
-        for section in Board::top_score_sections() {
-            let numbers: Vec<u32> = section
-                .iter()
-                .map(|field| match self.tiles.get(field) {
-                    Some(tile) => tile.unwrap().top as u32,
-                    None => 0,
-                })
-                .collect();
-
-            if all_elements_equal(&numbers) {
-                score += numbers.first().unwrap() * numbers.len() as u32;
-            }
-        }
-
-        // left sections
-        for section in Board::left_score_sections() {
-            let numbers: Vec<u32> = section
-                .iter()
-                .map(|field| match self.tiles.get(field) {
-                    Some(tile) => tile.unwrap().left as u32,
-                    None => 0,
-                })
-                .collect();
-
-            if all_elements_equal(&numbers) {
-                score += numbers.first().unwrap() * numbers.len() as u32;
-            }
-        }
-
-        // right sections
-        for section in Board::right_score_sections() {
-            let numbers: Vec<u32> = section
-                .iter()
-                .map(|field| match self.tiles.get(field) {
-                    Some(tile) => tile.unwrap().right as u32,
-                    None => 0,
-                })
-                .collect();
-
-            if all_elements_equal(&numbers) {
-                score += numbers.first().unwrap() * numbers.len() as u32;
-            }
-        }
+        score += self.section_score::<NumTop>();
+        score += self.section_score::<NumLeft>();
+        score += self.section_score::<NumRight>();
 
         score
     }
