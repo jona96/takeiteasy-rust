@@ -1,6 +1,12 @@
 use core::fmt;
 use strum_macros::EnumIter;
 
+pub enum Direction {
+    Top, // from top to bottom
+    Left, // from down left to up right
+    Right, // from down right to up left
+}
+
 #[repr(i32)]
 #[derive(PartialEq, Eq, Debug, Copy, Hash, Clone, EnumIter)]
 pub enum NumTop {

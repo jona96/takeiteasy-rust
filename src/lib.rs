@@ -8,7 +8,7 @@ use std::{
     hash::Hash,
 };
 use strum::IntoEnumIterator;
-use tile::{NumLeft, NumRight, NumTop, Tile};
+use tile::{Direction, NumLeft, NumRight, NumTop, Tile};
 
 #[repr(i32)]
 #[derive(PartialEq, Eq, Copy, Clone, Hash, Debug)]
@@ -119,6 +119,48 @@ impl Board {
         fields
     }
 
+    pub fn remaining_tiles(&self) -> HashSet<Tile> {
+        let mut reservoir = TileReservoir::new();
+        for tile in self.tiles.values() {
+            let tile = tile.unwrap();
+            assert!(reservoir.pick_tile(&tile).is_ok());
+        }
+        reservoir.remaining_tiles
+    }
+
+    pub fn empty_fields(&self) -> HashSet<Field> {
+        let mut fields = HashSet::new();
+        for field in Board::all_fields() {
+            if !self.tiles.contains_key(&field) || self.tiles.get(&field).is_none() {
+                fields.insert(field);
+            }
+        }
+        fields
+    }
+
+    pub fn is_full(&self) -> bool {
+        self.empty_fields().is_empty()
+    }
+
+    pub fn place_tile(&mut self, field: Field, tile: Tile) -> Result<(), ()> {
+        if !field.check().is_ok() {
+            return Err(());
+        }
+        if self.tiles.contains_key(&field) {
+            return Err(());
+        }
+        if self.tiles.values().any(|t| t == &Some(tile)) {
+            return Err(());
+        }
+        self.tiles.insert(field, Some(tile));
+        Ok(())
+    }
+
+    pub fn place_tile_on_new_board(&self, field: Field, tile: Tile) -> Result<Board, ()> {
+        let mut new_board: Board = self.clone();
+        new_board.place_tile(field, tile).map(|_| new_board)
+    }
+
     fn top_score_sections() -> Vec<Vec<Field>> {
         let section_top_1 = vec![field!(1, 1), field!(1, 2), field!(1, 3)];
         let section_top_2 = vec![field!(2, 1), field!(2, 2), field!(2, 3), field!(2, 4)];
@@ -178,78 +220,25 @@ impl Board {
         vec![section1, section2, section3, section4, section5]
     }
 
-    pub fn remaining_tiles(&self) -> HashSet<Tile> {
-        let mut reservoir = TileReservoir::new();
-        for tile in self.tiles.values() {
-            let tile = tile.unwrap();
-            assert!(reservoir.pick_tile(&tile).is_ok());
+    fn score_sections(direction: &Direction) -> Vec<Vec<Field>> {
+        match direction {
+            Direction::Top => Board::top_score_sections(),
+            Direction::Left => Board::left_score_sections(),
+            Direction::Right => Board::right_score_sections(),
         }
-        reservoir.remaining_tiles
     }
 
-    pub fn empty_fields(&self) -> HashSet<Field> {
-        let mut fields = HashSet::new();
-        for field in Board::all_fields() {
-            if !self.tiles.contains_key(&field) || self.tiles.get(&field).is_none() {
-                fields.insert(field);
-            }
-        }
-        fields
-    }
-
-    pub fn is_full(&self) -> bool {
-        self.empty_fields().is_empty()
-    }
-
-    pub fn place_tile(&mut self, field: Field, tile: Tile) -> Result<(), ()> {
-        if !field.check().is_ok() {
-            return Err(());
-        }
-        if self.tiles.contains_key(&field) {
-            return Err(());
-        }
-        if self.tiles.values().any(|t| t == &Some(tile)) {
-            return Err(());
-        }
-        self.tiles.insert(field, Some(tile));
-        Ok(())
-    }
-
-    pub fn place_tile_on_new_board(&self, field: Field, tile: Tile) -> Result<Board, ()> {
-        let mut new_board: Board = self.clone();
-        new_board.place_tile(field, tile).map(|_| new_board)
-    }
-
-    fn section_score<T: 'static>(&self) -> u32 {
+    fn section_score(&self, direction: Direction) -> u32 {
         let mut score: u32 = 0;
-        let t_type = TypeId::of::<T>();
-        let top_type = TypeId::of::<NumTop>();
-        let left_type = TypeId::of::<NumLeft>();
-        let right_type = TypeId::of::<NumRight>();
-
-        let sections = if t_type == top_type {
-            Board::top_score_sections()
-        } else if t_type == left_type {
-            Board::left_score_sections()
-        } else if t_type == right_type {
-            Board::right_score_sections()
-        } else {
-            panic!("Unexpected type");
-        };
-
-        for section in sections {
+        for section in Board::score_sections(&direction) {
             let numbers: Vec<u32> = section
                 .iter()
                 .map(|field| match self.tiles.get(field) {
                     Some(tile) => {
-                        if t_type == top_type {
-                            tile.unwrap().top as u32
-                        } else if t_type == left_type {
-                            tile.unwrap().left as u32
-                        } else if t_type == right_type {
-                            tile.unwrap().right as u32
-                        } else {
-                            panic!("Unexpected type");
+                        match direction {
+                            Direction::Top => tile.unwrap().top as u32,
+                            Direction::Left => tile.unwrap().left as u32,
+                            Direction::Right => tile.unwrap().right as u32,
                         }
                     }
                     None => 0,
@@ -264,9 +253,9 @@ impl Board {
     }
 
     pub fn score(&self) -> u32 {
-        self.section_score::<NumTop>()
-            + self.section_score::<NumLeft>()
-            + self.section_score::<NumRight>()
+        self.section_score(Direction::Top)
+            + self.section_score(Direction::Left)
+            + self.section_score(Direction::Right)
     }
 }
 
