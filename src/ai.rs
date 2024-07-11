@@ -20,19 +20,31 @@ impl AI {
         Ok(AI {})
     }
 
-    pub fn play_game(depth: i32) -> u32 {
+    pub fn play_game(depth: i32, print: bool) -> u32 {
         let mut game = Game::new();
         while !game.finished() {
             let mut scores: HashMap<Field, f64> = HashMap::new();
             for field in game.board.empty_fields() {
-                scores.insert(field, AI::estimated_score(&game.board, depth).unwrap());
+                let board_with_new_tile = game
+                    .board
+                    .place_tile_on_new_board(field, game.current_tile.unwrap())
+                    .unwrap();
+                scores.insert(
+                    field,
+                    AI::estimated_score(&board_with_new_tile, depth).unwrap(),
+                );
             }
             assert!(game.place_tile(best_field(&scores)).is_ok());
-            dbg!(scores);
+            if print {
+                dbg!(scores);
+                println!("{}", game.board);
+            }
         }
         let score = game.board.score();
-        dbg!(score);
-        println!("{}", game.board);
+        if print {
+            dbg!(score);
+            println!("{}", game.board);
+        }
         score
     }
 

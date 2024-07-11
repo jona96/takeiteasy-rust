@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use ai::AI;
 use takeiteasy::*;
 
@@ -105,5 +103,5 @@ fn test_eval_almost_full_board() {
 
 #[test]
 fn test_ai_full_game() {
-    assert_ne!(0, AI::play_game(0));
+    assert_ne!(0, AI::play_game(0, true));
 }
