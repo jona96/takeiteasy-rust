@@ -1,11 +1,7 @@
-use std::collections::{HashMap, HashSet};
-use crate::{tile::Tile, Board, Field, Game, TileReservoir};
+use crate::{Board, Field, Game};
+use std::collections::HashMap;
 
-pub struct AI {
-    game: Game,
-}
-
-fn best_field(scores:&HashMap<Field, f64>) -> Field {
+fn best_field(scores: &HashMap<Field, f64>) -> Field {
     let mut best_field = scores.keys().into_iter().next().unwrap();
     let mut best_score = scores.get(&best_field).unwrap();
     for (field, score) in scores {
@@ -17,16 +13,17 @@ fn best_field(scores:&HashMap<Field, f64>) -> Field {
     *best_field
 }
 
+pub struct AI {}
+
 impl AI {
     pub fn new() -> Result<AI, ()> {
-        Ok(AI { game: Game::new() })
+        Ok(AI {})
     }
 
-    pub fn play_game(depth:i32) -> u32 {
-
+    pub fn play_game(depth: i32) -> u32 {
         let mut game = Game::new();
         while !game.finished() {
-            let mut scores:HashMap<Field, f64> = HashMap::new();
+            let mut scores: HashMap<Field, f64> = HashMap::new();
             for field in game.board.empty_fields() {
                 scores.insert(field, AI::estimated_score(&game.board, depth).unwrap());
             }
@@ -46,7 +43,7 @@ impl AI {
         Ok(board.score() as f64) // TODO: better estimate
     }
 
-    pub fn estimated_score(board: &Board, iterations:i32) -> Result<f64, ()> {
+    pub fn estimated_score(board: &Board, iterations: i32) -> Result<f64, ()> {
         if iterations == 0 {
             return AI::eval_position(board);
         }
@@ -59,7 +56,7 @@ impl AI {
         // one level/iteration means the average of all remaining tiles on all empty fields
         let mut total_score = 0.0;
         for tile in board.remaining_tiles() {
-            let mut scores:HashMap<Field, f64> = HashMap::new();
+            let mut scores: HashMap<Field, f64> = HashMap::new();
             for field in board.empty_fields() {
                 let new_board = board.place_tile_on_new_board(field, tile).unwrap();
                 let score = AI::estimated_score(&new_board, iterations - 1).unwrap();
