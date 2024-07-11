@@ -7,6 +7,14 @@ pub enum Direction {
     Right, // from down right to up left
 }
 
+pub fn max_number(direction: &Direction) -> u32 {
+    match direction {
+        Direction::Top => NumTop::N9 as u32,
+        Direction::Left => NumLeft::N7 as u32,
+        Direction::Right => NumRight::N8 as u32,
+    }
+}
+
 #[repr(i32)]
 #[derive(PartialEq, Eq, Debug, Copy, Hash, Clone, EnumIter)]
 pub enum NumTop {

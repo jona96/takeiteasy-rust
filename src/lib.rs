@@ -8,7 +8,7 @@ use std::{
     hash::Hash,
 };
 use strum::IntoEnumIterator;
-use tile::{Direction, NumLeft, NumRight, NumTop, Tile};
+use tile::{max_number, Direction, NumLeft, NumRight, NumTop, Tile};
 
 #[repr(i32)]
 #[derive(PartialEq, Eq, Copy, Clone, Hash, Debug)]
@@ -246,10 +246,45 @@ impl Board {
                 .collect();
 
             if all_elements_equal(&numbers) {
-                score += numbers.first().unwrap() * numbers.len() as u32;
+                score += numbers.first().unwrap() * section.len() as u32;
             }
         }
         return score;
+    }
+
+    fn section_score_max(&self, direction: Direction) -> u32 {
+        let mut score: u32 = 0;
+        for section in Board::score_sections(&direction) {
+            let numbers_except_0: Vec<u32> = section
+                .iter()
+                .map(|field| match self.tiles.get(field) {
+                    Some(tile) => {
+                        match direction {
+                            Direction::Top => tile.unwrap().top as u32,
+                            Direction::Left => tile.unwrap().left as u32,
+                            Direction::Right => tile.unwrap().right as u32,
+                        }
+                    }
+                    None => 0,
+                })
+                .filter(|number| number.to_owned() != 0)
+                .collect();
+
+            if numbers_except_0.is_empty() {
+                // TODO: use max number
+                score += max_number(&direction) * section.len() as u32;
+            }
+            else if all_elements_equal(&numbers_except_0) {
+                score += numbers_except_0.first().unwrap() * section.len() as u32;
+            }
+        }
+        return score;
+    }
+
+    pub fn max_score(&self) -> u32 {
+        self.section_score_max(Direction::Top)
+            + self.section_score_max(Direction::Left)
+            + self.section_score_max(Direction::Right)
     }
 
     pub fn score(&self) -> u32 {
