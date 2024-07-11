@@ -40,7 +40,7 @@ impl AI {
         if board.is_full() {
             return Ok(board.score() as f64);
         }
-        Ok(board.score() as f64) // TODO: better estimate
+        Ok(board.max_score() as f64) // TODO: better estimate
     }
 
     pub fn estimated_score(board: &Board, iterations: i32) -> Result<f64, ()> {
